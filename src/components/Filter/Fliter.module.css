@@ -1,0 +1,12 @@
+.filterContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+.filter_input {
+    width: 240px;
+    padding: 8px 12px;
+    margin-bottom: 20px;
+}
