@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import { nanoid } from 'nanoid';
 import { addContact } from '../../redux/contactsSlicer';
 import css from './ContactForm.module.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectContacts } from '../../redux/selectors';
 
-export const ContactForm = ({ contacts }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+export const ContactForm = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
+
 
   const handleAddContact = formData => {
     const hasDuplicates = contacts.some(
@@ -18,21 +17,23 @@ export const ContactForm = ({ contacts }) => {
       return;
     }
 
-    const finalContact = { ...formData, id: nanoid() };
+    const finalContact = { ...formData };
 
-    const action = addContact(finalContact);
-    dispatch(action);
+    dispatch(addContact(finalContact));
   };
 
   const handleFormSubmit = event => {
     event.preventDefault();
+
+    const name = event.currentTarget.name.value;
+    const number = event.currentTarget.number.value;
+
     const formData = {
       name,
       number,
     };
     handleAddContact(formData);
-    setName('');
-    setNumber('');
+    event.currentTarget.reset();
   };
 
   return (
@@ -44,19 +45,13 @@ export const ContactForm = ({ contacts }) => {
           className={css.input}
           type="text"
           name="name"
-          required
-          value={name}
-          onChange={e => setName(e.target.value)}
-        />
+          required/>
       </label>
       <label className={css.label}> Number <input
           className={css.input}
           type="tel"
           name="number"
-          required
-          value={number}
-          onChange={e => setNumber(e.target.value)}
-        />
+          required/>
       </label>
       <button className={css.btn} type="submit">Add contact</button>
       </form>
